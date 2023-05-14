@@ -1,1 +1,37 @@
+import java.util.Scanner;
 
+public class A {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Input string: ");
+        String inputString = scanner.nextLine();
+        System.out.print("Trash symbols string: ");
+        String trashSymbolsString = scanner.nextLine();
+        boolean isPalindrome = isPalindromeWithTrash(inputString, trashSymbolsString);
+        System.out.println("Result: " + isPalindrome);
+    }
+
+    public static boolean isPalindromeWithTrash(String inputString, String trashSymbolsString) {
+        int x = 0, y = inputString.length() - 1;
+        while (x < y) {
+            char leftChar = Character.toLowerCase(inputString.charAt(x));
+            char rightChar = Character.toLowerCase(inputString.charAt(y));
+            if (isTrashSymbol(leftChar, trashSymbolsString)) {
+                x++;
+            } else if (isTrashSymbol(rightChar, trashSymbolsString)) {
+                y--;
+            } else {
+                if (leftChar != rightChar) {
+                    return false;
+                }
+                x++;
+                y--;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isTrashSymbol(char ch, String trashSymbolsString) {
+        return trashSymbolsString.indexOf(ch) != -1;
+    }
+}
