@@ -1,0 +1,126 @@
+using System;
+
+class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Point(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+
+class Minefield
+{
+    private int[,] minefield;
+    private bool[,] visited;
+    private int n; // number of rows
+    private int m; // number of columns
+    private Point totoshka;
+    private Point ally;
+
+    public Minefield(int[,] field)
+    {
+        minefield = field;
+        n = field.GetLength(0);
+        m = field.GetLength(1);
+        visited = new bool[n, m];
+    }
+
+    public void Explore(int x, int y)
+    {
+        if (x < 0 || x >= n || y < 0 || y >= m || visited[x, y])
+        {
+            return;
+        }
+
+        visited[x, y] = true;
+
+        if (minefield[x, y] == 1) // bomb found
+        {
+            return;
+        }
+
+        Console.WriteLine($"Position: ({x}, {y})"); // Print current position as part of safe path
+
+        if (x == n - 1 && y == m - 1) // Destination reached
+        {
+            return;
+        }
+
+        if (ally == null || (ally.X == x && ally.Y == y)) // Ally can move to the adjacent cell
+        {
+            ally = new Point(x, y);
+
+            // Recursively call Explore() on all adjacent cells
+            Explore(x - 1, y); // up
+            Explore(x + 1, y); // down
+            Explore(x, y - 1); // left
+            Explore(x, y + 1); // right
+
+            ally = null; // Reset ally's position after backtracking
+        }
+
+        // Continue exploring without ally in the current cell
+        Explore(x - 1, y); // up
+        Explore(x + 1, y); // down
+        Explore(x, y - 1); // left
+        Explore(x, y + 1); // right
+    }
+
+    public void FindSafePath()
+    {
+        totoshka = new Point(0, 0); // Starting position for Totoshka
+
+        // Call Explore() function with the starting position
+        Explore(totoshka.X, totoshka.Y);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int rows = 5;
+        int columns = 5;
+
+        int[,] minefield = GenerateRandomMinefield(rows, columns);
+        PrintMinefield(minefield);
+
+        Minefield game = new Minefield(minefield);
+        game.FindSafePath();
+    }
+
+    static int[,] GenerateRandomMinefield(int rows, int columns)
+    {
+        int[,] minefield = new int[rows, columns];
+        Random random = new Random();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                minefield[i, j] = random.Next(2); // Generate a random integer 0 or 1
+            }
+        }
+
+        return minefield;
+    }
+
+    static void PrintMinefield(int[,] minefield)
+    {
+        int rows = minefield.GetLength(0);
+        int columns = minefield.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                Console.Write(minefield[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
