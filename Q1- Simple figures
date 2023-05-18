@@ -72,14 +72,14 @@ class Aggregation {
         figures.add(figure);
     }
 
-    public void move(double deltaX, double deltaY) {
+    public void move(double dx, double dy) {
         for (Object figure : figures) {
             if (figure instanceof Point) {
-                ((Point) figure).move(deltaX, deltaY);
+                ((Point) figure).move(dx, dy);
             } else if (figure instanceof Line) {
-                ((Line) figure).move(deltaX, deltaY);
+                ((Line) figure).move(dx, dy);
             } else if (figure instanceof Circle) {
-                ((Circle) figure).move(deltaX, deltaY);
+                ((Circle) figure).move(dx, dy);
             }
         }
     }
@@ -113,9 +113,9 @@ class Main {
         aggregation.addFigure(circle);
 
         // Move the aggregation
-        double deltaX = 1.5;
-        double deltaY = 2.5;
-        aggregation.move(deltaX, deltaY);
+        double dx = 1.5;
+        double dy = 2.5;
+        aggregation.move(dx, dy);
 
         // Rotate the aggregation
         double angle = Math.PI / 4; // 45 degrees in radians
