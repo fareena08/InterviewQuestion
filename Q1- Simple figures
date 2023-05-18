@@ -1,0 +1,131 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Point {
+     double x;
+     double y;
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void move(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
+
+    public void rotate(double angle) {
+        double newX = x * Math.cos(angle) - y * Math.sin(angle);
+        double newY = x * Math.sin(angle) + y * Math.cos(angle);
+        x = newX;
+        y = newY;
+    }
+}
+
+class Line {
+     Point start;
+     Point end;
+
+    public Line(Point start, Point end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public void move(double dx, double dy) {
+        start.move(dx, dy);
+        end.move(dx, dy);
+    }
+
+    public void rotate(double angle) {
+        start.rotate(angle);
+        end.rotate(angle);
+    }
+}
+
+class Circle {
+     Point center;
+     double radius;
+
+    public Circle(Point center, double radius) {
+        this.center = center;
+        this.radius = radius;
+    }
+
+    public void move(double dx, double dy) {
+        center.move(dx, dy);
+    }
+
+    public void rotate(double angle) {
+        center.rotate(angle);
+    }
+}
+
+class Aggregation {
+    private List<Object> figures;
+
+    public Aggregation() {
+        figures = new ArrayList<>();
+    }
+
+    public void addFigure(Object figure) {
+        figures.add(figure);
+    }
+
+    public void move(double deltaX, double deltaY) {
+        for (Object figure : figures) {
+            if (figure instanceof Point) {
+                ((Point) figure).move(deltaX, deltaY);
+            } else if (figure instanceof Line) {
+                ((Line) figure).move(deltaX, deltaY);
+            } else if (figure instanceof Circle) {
+                ((Circle) figure).move(deltaX, deltaY);
+            }
+        }
+    }
+
+    public void rotate(double angle) {
+        for (Object figure : figures) {
+            if (figure instanceof Point) {
+                ((Point) figure).rotate(angle);
+            } else if (figure instanceof Line) {
+                ((Line) figure).rotate(angle);
+            } else if (figure instanceof Circle) {
+                ((Circle) figure).rotate(angle);
+            }
+        }
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        // Create points, lines, and a circle
+        Point point1 = new Point(2, 3);
+        Point point2 = new Point(5, 7);
+        Line line1 = new Line(point1, point2);
+        Circle circle = new Circle(new Point(0, 0), 4.5);
+
+        // Create an aggregation and add figures to it
+        Aggregation aggregation = new Aggregation();
+        aggregation.addFigure(point1);
+        aggregation.addFigure(point2);
+        aggregation.addFigure(line1);
+        aggregation.addFigure(circle);
+
+        // Move the aggregation
+        double deltaX = 1.5;
+        double deltaY = 2.5;
+        aggregation.move(deltaX, deltaY);
+
+        // Rotate the aggregation
+        double angle = Math.PI / 4; // 45 degrees in radians
+        aggregation.rotate(angle);
+
+        // Print the updated positions of the figures
+        System.out.println("Point 1: (" + point1.x + ", " + point1.y + ")");
+        System.out.println("Point 2: (" + point2.x + ", " + point2.y + ")");
+        System.out.println("Line 1 Start: (" + line1.start.x + ", " + line1.start.y + ")");
+        System.out.println("Line 1 End: (" + line1.end.x + ", " + line1.end.y + ")");
+        System.out.println("Circle Center: (" + circle.center.x + ", " + circle.center.y + ")");
+    }
+}
